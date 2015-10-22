@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+  <body>
+      <button type="button" name="button">Want to play Tic Tac Toe?</button>
+    <div class="container">
+    </div>
+  <script>
+  $(document).ready(
+  	$('button').click(function(){
+  		Game.renderBoard();
+      $('button').hide();
+    })
+  );
+  var gameBoard = [
+    "&nbsp", "&nbsp", "&nbsp",
+    "&nbsp", "&nbsp", "&nbsp",
+    "&nbsp", "&nbsp", "&nbsp"
+  ];
+    var Game = (function (){
+
+    var turn = "X";
+
+    return  {
+      renderBoard: function(){
+        gameBoard = [
+          "&nbsp", "&nbsp", "&nbsp",
+          "&nbsp", "&nbsp", "&nbsp",
+          "&nbsp", "&nbsp", "&nbsp"
+        ];
+        turn = "X";
+        // draw a bunch of elements
+        $(".container").html('');
+        var board = $('<div>');
+        board.on('click', '.block', function(event){
+          Game.updateGame(event);
+          Game.checkWin();
+          Game.getTurn();
+        });
+        for(var i = 0; i < gameBoard.length; i++){
+          if (i % 3 === 0){
+            var row = $('<div>');
+            row.addClass('row');
+          }
+          var square = $('<div>');
+          square.addClass('square');
+          square.addClass('block')
+          square.attr("id", i);
+          square.appendTo(row);
+          row.appendTo($(board));
+        }
+        board.appendTo($('.container'));
+        // set a bunch of events
+      },
+
+      checkWin: function(){
+    			// check rows for win
+          if(((gameBoard[0] === gameBoard[1]) && (gameBoard[0] === gameBoard[2])) && (gameBoard[0] !== "&nbsp")){
+              Game.reset();
+          }
+          else if(((gameBoard[3] === gameBoard[4]) && (gameBoard[3] === gameBoard[5])) && (gameBoard[3] !== "&nbsp")){
+              Game.reset();
+          }
+          else if(((gameBoard[6] === gameBoard[7]) && (gameBoard[6] === gameBoard[8])) && (gameBoard[6] !== "&nbsp")){
+              Game.reset();
+          }
+    			// check columns for win
+          else if(((gameBoard[0] === gameBoard[3]) && (gameBoard[0] === gameBoard[6])) && (gameBoard[0] !== "&nbsp")){
+              Game.reset();
+          }
+          else if(((gameBoard[1] === gameBoard[4]) && (gameBoard[1] === gameBoard[7])) && (gameBoard[1] !== "&nbsp")){
+              Game.reset();
+    			}
+          else if(((gameBoard[2] === gameBoard[5]) && (gameBoard[2] === gameBoard[8])) && (gameBoard[2] !== "&nbsp")){
+              Game.reset();
+          }
+    			// check diagonals for win
+    			else if(((gameBoard[0] === gameBoard[4]) && (gameBoard[0] === gameBoard[8])) && (gameBoard[0] !== "&nbsp")){
+              Game.reset();
+    			}
+          else if(((gameBoard[6] === gameBoard[4]) && (gameBoard[6] === gameBoard[2])) && (gameBoard[6] !== "&nbsp")){
+              Game.reset();
+          }
+          else if($('.block').length === 0){
+              Game.tieReset();
+          }
+        },
+
+      updateGame: function(event){
+        var ind = $(event.target);
+        ind.text(turn);
+        ind.removeClass('block');
+        gameBoard[ind.attr("id")] = turn;
+      },
+
+      getTurn: function(){
+          if (turn === "X"){
+            turn = "O"
+        } else {turn = "X"}
+      },
+
+      reset: function(){
+        alert("Player " + turn + " wins!");
+        $('button').show();
+
+      },
+      tieReset: function(){
+        alert("Tie game! Nobody won... but nobody lost?");
+        $('button').show();
+      }
+
+    }
+  })();
+
+  </script>
+</body>
+</html>
